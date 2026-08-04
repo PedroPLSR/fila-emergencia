@@ -17,6 +17,9 @@ docker compose up --build -d
 | Totem | http://localhost:8080/totem/ |
 | Painel | http://localhost:8080/painel/ |
 | API | http://localhost:3000/api/ |
+| pgAdmin (banco) | http://localhost:5050/ |
+
+Abra o pgAdmin e expanda o servidor **Fila Emergencia** (já pré-cadastrado). Se pedir senha do banco, use `fila`.
 
 Validação ponta a ponta: [specs/001-fila-emergencia-sangue/quickstart.md](specs/001-fila-emergencia-sangue/quickstart.md).
 
