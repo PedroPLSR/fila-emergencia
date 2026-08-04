@@ -1,0 +1,445 @@
+openapi: 3.0.3
+info:
+  title: Fila Emergência — Coleta e Exame de Sangue (Simulação)
+  version: 0.1.0
+  description: |
+    API REST da simulação de posto emergencial.
+    Totem público usa emissão e consulta; painel da equipe usa filas, prioridade, chamada, dia e logs.
+    Sem autenticação na v1.
+servers:
+  - url: http://localhost:3000
+    description: API via Docker Compose (serviço api)
+tags:
+  - name: exames
+  - name: atendimentos
+  - name: filas
+  - name: dia
+  - name: logs
+
+paths:
+  /api/exames:
+    get:
+      tags: [exames]
+      summary: Listar tipos de exame ativos (totem)
+      responses:
+        "200":
+          description: Lista de tipos ativos
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: "#/components/schemas/TipoExame"
+
+  /api/atendimentos:
+    post:
+      tags: [atendimentos]
+      summary: Emitir senha no totem
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/EmitirSenhaRequest"
+      responses:
+        "201":
+          description: Senha emitida
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    $ref: "#/components/schemas/Atendimento"
+        "400":
+          $ref: "#/components/responses/Error"
+
+  /api/atendimentos/consulta:
+    get:
+      tags: [atendimentos]
+      summary: Consultar status/resultado (totem)
+      parameters:
+        - name: tipo_exame_codigo
+          in: query
+          required: true
+          schema:
+            type: string
+        - name: numero_senha
+          in: query
+          required: true
+          schema:
+            type: integer
+            minimum: 1
+        - name: documento
+          in: query
+          required: false
+          description: Opcional para reforçar identificação
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Atendimento encontrado (dia aberto ou histórico recente conforme implementação)
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    $ref: "#/components/schemas/AtendimentoConsulta"
+        "404":
+          $ref: "#/components/responses/Error"
+
+  /api/atendimentos/{id}/prioridade:
+    patch:
+      tags: [atendimentos]
+      summary: Alterar prioridade (painel)
+      parameters:
+        - $ref: "#/components/parameters/AtendimentoId"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [prioridade]
+              properties:
+                prioridade:
+                  $ref: "#/components/schemas/Prioridade"
+      responses:
+        "200":
+          description: Prioridade atualizada
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    $ref: "#/components/schemas/Atendimento"
+        "400":
+          $ref: "#/components/responses/Error"
+        "404":
+          $ref: "#/components/responses/Error"
+        "409":
+          $ref: "#/components/responses/Error"
+
+  /api/atendimentos/{id}/status:
+    patch:
+      tags: [atendimentos]
+      summary: Atualizar status e/ou resultado (painel)
+      parameters:
+        - $ref: "#/components/parameters/AtendimentoId"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/AtualizarStatusRequest"
+      responses:
+        "200":
+          description: Status atualizado
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    $ref: "#/components/schemas/Atendimento"
+        "400":
+          $ref: "#/components/responses/Error"
+        "404":
+          $ref: "#/components/responses/Error"
+        "409":
+          $ref: "#/components/responses/Error"
+
+  /api/filas:
+    get:
+      tags: [filas]
+      summary: Visão operacional das filas do dia aberto (painel)
+      parameters:
+        - name: tipo_exame_codigo
+          in: query
+          required: false
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Resumo por tipo
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: "#/components/schemas/FilaResumo"
+
+  /api/filas/{tipoExameCodigo}/proximo:
+    post:
+      tags: [filas]
+      summary: Chamar próximo da fila (claim atômico)
+      parameters:
+        - name: tipoExameCodigo
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Atendimento chamado
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    $ref: "#/components/schemas/Atendimento"
+        "404":
+          description: Fila vazia ou tipo inexistente
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+
+  /api/dia:
+    get:
+      tags: [dia]
+      summary: Dia operacional atual
+      responses:
+        "200":
+          description: Dia aberto
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    $ref: "#/components/schemas/DiaOperacional"
+
+  /api/dia/encerrar-abrir:
+    post:
+      tags: [dia]
+      summary: Encerrar dia atual e abrir novo (painel)
+      responses:
+        "200":
+          description: Novo dia aberto; anterior fechado
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: object
+                    properties:
+                      dia_anterior:
+                        $ref: "#/components/schemas/DiaOperacional"
+                      dia_atual:
+                        $ref: "#/components/schemas/DiaOperacional"
+
+  /api/logs:
+    get:
+      tags: [logs]
+      summary: Listar eventos de log (painel)
+      parameters:
+        - name: limit
+          in: query
+          schema:
+            type: integer
+            default: 100
+            maximum: 500
+        - name: acao
+          in: query
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Eventos em ordem temporal desc
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: "#/components/schemas/EventoLog"
+
+components:
+  parameters:
+    AtendimentoId:
+      name: id
+      in: path
+      required: true
+      schema:
+        type: string
+
+  responses:
+    Error:
+      description: Erro de negócio ou validação
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/Error"
+
+  schemas:
+    Prioridade:
+      type: string
+      enum: [rotina, urgente]
+
+    StatusAtendimento:
+      type: string
+      enum: [aguardando, chamado, em_atendimento, concluido, cancelado]
+
+    TipoExame:
+      type: object
+      required: [id, codigo, nome, ativo]
+      properties:
+        id:
+          type: string
+        codigo:
+          type: string
+        nome:
+          type: string
+        ativo:
+          type: boolean
+
+    DiaOperacional:
+      type: object
+      required: [id, status, aberto_em]
+      properties:
+        id:
+          type: string
+        status:
+          type: string
+          enum: [aberto, fechado]
+        aberto_em:
+          type: string
+          format: date-time
+        fechado_em:
+          type: string
+          format: date-time
+          nullable: true
+
+    EmitirSenhaRequest:
+      type: object
+      required: [nome_completo, documento, tipo_exame_codigo]
+      properties:
+        nome_completo:
+          type: string
+          minLength: 1
+        documento:
+          type: string
+          minLength: 1
+        tipo_exame_codigo:
+          type: string
+
+    AtualizarStatusRequest:
+      type: object
+      required: [status]
+      properties:
+        status:
+          $ref: "#/components/schemas/StatusAtendimento"
+        resultado:
+          type: string
+          nullable: true
+          description: apto | inapto | texto curto
+
+    Atendimento:
+      type: object
+      required:
+        - id
+        - numero_senha
+        - nome_completo
+        - documento
+        - prioridade
+        - status
+        - tipo_exame
+        - dia_operacional_id
+        - created_at
+      properties:
+        id:
+          type: string
+        numero_senha:
+          type: integer
+        nome_completo:
+          type: string
+        documento:
+          type: string
+        prioridade:
+          $ref: "#/components/schemas/Prioridade"
+        status:
+          $ref: "#/components/schemas/StatusAtendimento"
+        resultado:
+          type: string
+          nullable: true
+        tipo_exame:
+          $ref: "#/components/schemas/TipoExame"
+        dia_operacional_id:
+          type: string
+        created_at:
+          type: string
+          format: date-time
+        chamado_em:
+          type: string
+          format: date-time
+          nullable: true
+        concluido_em:
+          type: string
+          format: date-time
+          nullable: true
+
+    AtendimentoConsulta:
+      allOf:
+        - $ref: "#/components/schemas/Atendimento"
+        - type: object
+          properties:
+            resultado_disponivel:
+              type: boolean
+
+    FilaResumo:
+      type: object
+      properties:
+        tipo_exame:
+          $ref: "#/components/schemas/TipoExame"
+        aguardando:
+          type: integer
+        urgentes_aguardando:
+          type: integer
+        proximos:
+          type: array
+          items:
+            $ref: "#/components/schemas/Atendimento"
+          description: Prévia ordenada (urgente FIFO depois rotina FIFO)
+
+    EventoLog:
+      type: object
+      required: [id, ocorrido_em, acao, detalhe]
+      properties:
+        id:
+          type: string
+        ocorrido_em:
+          type: string
+          format: date-time
+        acao:
+          type: string
+        atendimento_id:
+          type: string
+          nullable: true
+        detalhe:
+          type: string
+
+    Error:
+      type: object
+      required: [error]
+      properties:
+        error:
+          type: object
+          required: [code, message]
+          properties:
+            code:
+              type: string
+            message:
+              type: string
