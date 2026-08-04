@@ -26,13 +26,13 @@
 
 **Purpose**: Estrutura do repositório e base Docker/Node
 
-- [ ] T001 Create project directories `backend/src/{db,routes,services,middleware}`, `backend/tests/{contract,integration}`, and `frontend/public/{totem,painel,shared}` per plan.md
-- [ ] T002 Create `backend/package.json` with Express, pg, and start scripts for Node.js 20
-- [ ] T003 [P] Create `backend/Dockerfile` for Node.js 20 API image
-- [ ] T004 [P] Create `frontend/Dockerfile` and `frontend/nginx.conf` to serve static files and proxy `/api` to the api service
-- [ ] T005 [P] Create root `docker-compose.yml` with services `db` (Postgres 16), `api`, and `web`
-- [ ] T006 [P] Create `.env.example` and `.dockerignore` at repository root
-- [ ] T007 [P] Create entry `frontend/public/index.html` linking to totem and painel
+- [x] T001 Create project directories `backend/src/{db,routes,services,middleware}`, `backend/tests/{contract,integration}`, and `frontend/public/{totem,painel,shared}` per plan.md
+- [x] T002 Create `backend/package.json` with Express, pg, and start scripts for Node.js 20
+- [x] T003 [P] Create `backend/Dockerfile` for Node.js 20 API image
+- [x] T004 [P] Create `frontend/Dockerfile` and `frontend/nginx.conf` to serve static files and proxy `/api` to the api service
+- [x] T005 [P] Create root `docker-compose.yml` with services `db` (Postgres 16), `api`, and `web`
+- [x] T006 [P] Create `.env.example` and `.dockerignore` at repository root
+- [x] T007 [P] Create entry `frontend/public/index.html` linking to totem and painel
 
 ---
 
@@ -42,14 +42,14 @@
 
 **⚠️ CRITICAL**: Nenhuma user story começa antes desta fase
 
-- [ ] T008 Create Postgres pool and migrate runner in `backend/src/db/pool.js` and `backend/src/db/migrate.js`
-- [ ] T009 Create SQL migration for `tipos_exame`, `dias_operacionais`, `atendimentos`, and `eventos_log` per `data-model.md` in `backend/src/db/migrations/001_init.sql`
-- [ ] T010 Seed tipos de exame (`triagem`, `coleta_sangue`, `exame_campanha`) and open first `dia_operacional` in `backend/src/db/migrations/002_seed.sql`
-- [ ] T011 [P] Implement Express app bootstrap and error middleware in `backend/src/index.js` and `backend/src/middleware/errors.js`
-- [ ] T012 [P] Implement shared frontend API client in `frontend/public/shared/api.js` and base styles in `frontend/public/shared/styles.css`
-- [ ] T013 Implement `GET /api/exames` and `GET /api/dia` in `backend/src/routes/exames.js` and `backend/src/routes/dia.js` wired from `backend/src/index.js`
-- [ ] T014 Implement append-only `logService` in `backend/src/services/logService.js` (used by later stories)
-- [ ] T015 Verify `docker compose up --build` starts db + api + web and migrations apply (smoke check)
+- [x] T008 Create Postgres pool and migrate runner in `backend/src/db/pool.js` and `backend/src/db/migrate.js`
+- [x] T009 Create SQL migration for `tipos_exame`, `dias_operacionais`, `atendimentos`, and `eventos_log` per `data-model.md` in `backend/src/db/migrations/001_init.sql`
+- [x] T010 Seed tipos de exame (`triagem`, `coleta_sangue`, `exame_campanha`) and open first `dia_operacional` in `backend/src/db/migrations/002_seed.sql`
+- [x] T011 [P] Implement Express app bootstrap and error middleware in `backend/src/index.js` and `backend/src/middleware/errors.js`
+- [x] T012 [P] Implement shared frontend API client in `frontend/public/shared/api.js` and base styles in `frontend/public/shared/styles.css`
+- [x] T013 Implement `GET /api/exames` and `GET /api/dia` in `backend/src/routes/exames.js` and `backend/src/routes/dia.js` wired from `backend/src/index.js`
+- [x] T014 Implement append-only `logService` in `backend/src/services/logService.js` (used by later stories)
+- [x] T015 Verify `docker compose up --build` starts db + api + web and migrations apply (smoke check)
 
 **Checkpoint**: Foundation ready — user stories podem começar
 
@@ -63,10 +63,10 @@
 
 ### Implementation for User Story 1
 
-- [ ] T016 [US1] Implement `atendimentoService.emitirSenha` (validate nome/documento, allocate next numero in transaction) in `backend/src/services/atendimentoService.js`
-- [ ] T017 [US1] Implement `POST /api/atendimentos` in `backend/src/routes/atendimentos.js` per `contracts/openapi.yaml`
-- [ ] T018 [US1] Log `EMITIR_SENHA` via `logService` from emit flow in `backend/src/services/atendimentoService.js`
-- [ ] T019 [US1] Build totem UI emit flow in `frontend/public/totem/index.html`, `frontend/public/totem/totem.css`, and `frontend/public/totem/totem.js` (list exames, form, show senha; no prioritize/call actions)
+- [x] T016 [US1] Implement `atendimentoService.emitirSenha` (validate nome/documento, allocate next numero in transaction) in `backend/src/services/atendimentoService.js`
+- [x] T017 [US1] Implement `POST /api/atendimentos` in `backend/src/routes/atendimentos.js` per `contracts/openapi.yaml`
+- [x] T018 [US1] Log `EMITIR_SENHA` via `logService` from emit flow in `backend/src/services/atendimentoService.js`
+- [x] T019 [US1] Build totem UI emit flow in `frontend/public/totem/index.html`, `frontend/public/totem/totem.css`, and `frontend/public/totem/totem.js` (list exames, form, show senha; no prioritize/call actions)
 
 **Checkpoint**: US1 functional — MVP demonstrável (emitir senha no totem)
 
@@ -80,10 +80,10 @@
 
 ### Implementation for User Story 2
 
-- [ ] T020 [US2] Implement `atendimentoService.alterarPrioridade` (only while `aguardando`) in `backend/src/services/atendimentoService.js`
-- [ ] T021 [US2] Implement `PATCH /api/atendimentos/{id}/prioridade` in `backend/src/routes/atendimentos.js`
-- [ ] T022 [US2] Log `PRIORIZAR` in `backend/src/services/atendimentoService.js`
-- [ ] T023 [US2] Add painel shell and priority controls in `frontend/public/painel/index.html`, `frontend/public/painel/painel.css`, and `frontend/public/painel/painel.js`
+- [x] T020 [US2] Implement `atendimentoService.alterarPrioridade` (only while `aguardando`) in `backend/src/services/atendimentoService.js`
+- [x] T021 [US2] Implement `PATCH /api/atendimentos/{id}/prioridade` in `backend/src/routes/atendimentos.js`
+- [x] T022 [US2] Log `PRIORIZAR` in `backend/src/services/atendimentoService.js`
+- [x] T023 [US2] Add painel shell and priority controls in `frontend/public/painel/index.html`, `frontend/public/painel/painel.css`, and `frontend/public/painel/painel.js`
 
 **Checkpoint**: US1 + US2 — emissão e priorização disponíveis
 
@@ -97,12 +97,12 @@
 
 ### Implementation for User Story 3
 
-- [ ] T024 [US3] Implement `filaService.listarFilas` and `filaService.chamarProximo` with atomic claim (`FOR UPDATE SKIP LOCKED` or equivalent) in `backend/src/services/filaService.js`
-- [ ] T025 [US3] Implement `GET /api/filas` and `POST /api/filas/{tipoExameCodigo}/proximo` in `backend/src/routes/filas.js`
-- [ ] T026 [US3] Implement `atendimentoService.atualizarStatus` with allowed transitions and optional `resultado` in `backend/src/services/atendimentoService.js`
-- [ ] T027 [US3] Implement `PATCH /api/atendimentos/{id}/status` in `backend/src/routes/atendimentos.js`
-- [ ] T028 [US3] Log `CHAMAR_PROXIMO` and `ATUALIZAR_STATUS` in respective services
-- [ ] T029 [US3] Extend painel UI for queue view, call next, and status updates in `frontend/public/painel/painel.js` and `frontend/public/painel/index.html`
+- [x] T024 [US3] Implement `filaService.listarFilas` and `filaService.chamarProximo` with atomic claim (`FOR UPDATE SKIP LOCKED` or equivalent) in `backend/src/services/filaService.js`
+- [x] T025 [US3] Implement `GET /api/filas` and `POST /api/filas/{tipoExameCodigo}/proximo` in `backend/src/routes/filas.js`
+- [x] T026 [US3] Implement `atendimentoService.atualizarStatus` with allowed transitions and optional `resultado` in `backend/src/services/atendimentoService.js`
+- [x] T027 [US3] Implement `PATCH /api/atendimentos/{id}/status` in `backend/src/routes/atendimentos.js`
+- [x] T028 [US3] Log `CHAMAR_PROXIMO` and `ATUALIZAR_STATUS` in respective services
+- [x] T029 [US3] Extend painel UI for queue view, call next, and status updates in `frontend/public/painel/painel.js` and `frontend/public/painel/index.html`
 
 **Checkpoint**: Ciclo operacional completo da fila no dia aberto
 
@@ -116,11 +116,11 @@
 
 ### Implementation for User Story 4
 
-- [ ] T030 [US4] Implement `diaService.encerrarAbrir` (close current, open new; no calendar auto-reset) in `backend/src/services/diaService.js`
-- [ ] T031 [US4] Implement `POST /api/dia/encerrar-abrir` in `backend/src/routes/dia.js`
-- [ ] T032 [US4] Log `ENCERRAR_ABRIR_DIA` in `backend/src/services/diaService.js`
-- [ ] T033 [US4] Ensure fila queries only use dia `aberto` in `backend/src/services/filaService.js`
-- [ ] T034 [US4] Add “Encerrar/abrir dia” action and confirm UX in `frontend/public/painel/painel.js` and `frontend/public/painel/index.html`
+- [x] T030 [US4] Implement `diaService.encerrarAbrir` (close current, open new; no calendar auto-reset) in `backend/src/services/diaService.js`
+- [x] T031 [US4] Implement `POST /api/dia/encerrar-abrir` in `backend/src/routes/dia.js`
+- [x] T032 [US4] Log `ENCERRAR_ABRIR_DIA` in `backend/src/services/diaService.js`
+- [x] T033 [US4] Ensure fila queries only use dia `aberto` in `backend/src/services/filaService.js`
+- [x] T034 [US4] Add “Encerrar/abrir dia” action and confirm UX in `frontend/public/painel/painel.js` and `frontend/public/painel/index.html`
 
 **Checkpoint**: Virada de dia manual validada
 
@@ -134,9 +134,9 @@
 
 ### Implementation for User Story 5
 
-- [ ] T035 [US5] Implement lookup by tipo + numero_senha (+ optional documento) returning full identification in `backend/src/services/atendimentoService.js`
-- [ ] T036 [US5] Expose staff-friendly detail in painel list/detail using existing atendimento payloads in `frontend/public/painel/painel.js`
-- [ ] T037 [US5] Add clear 404/error messages for invalid senha or wrong day in `backend/src/middleware/errors.js` and `frontend/public/shared/api.js`
+- [x] T035 [US5] Implement lookup by tipo + numero_senha (+ optional documento) returning full identification in `backend/src/services/atendimentoService.js`
+- [x] T036 [US5] Expose staff-friendly detail in painel list/detail using existing atendimento payloads in `frontend/public/painel/painel.js`
+- [x] T037 [US5] Add clear 404/error messages for invalid senha or wrong day in `backend/src/middleware/errors.js` and `frontend/public/shared/api.js`
 
 **Checkpoint**: Rastreabilidade consultável no painel e erros claros
 
@@ -150,8 +150,8 @@
 
 ### Implementation for User Story 6
 
-- [ ] T038 [US6] Implement `GET /api/atendimentos/consulta` in `backend/src/routes/atendimentos.js` with `resultado_disponivel` flag
-- [ ] T039 [US6] Add consultation UI on totem in `frontend/public/totem/totem.js` and `frontend/public/totem/index.html`
+- [x] T038 [US6] Implement `GET /api/atendimentos/consulta` in `backend/src/routes/atendimentos.js` with `resultado_disponivel` flag
+- [x] T039 [US6] Add consultation UI on totem in `frontend/public/totem/totem.js` and `frontend/public/totem/index.html`
 
 **Checkpoint**: Comunicação de resultado via totem
 
@@ -165,8 +165,8 @@
 
 ### Implementation for User Story 7
 
-- [ ] T040 [US7] Implement `GET /api/logs` in `backend/src/routes/logs.js` (limit/filter by `acao`)
-- [ ] T041 [US7] Add logs view section in `frontend/public/painel/index.html` and `frontend/public/painel/painel.js`
+- [x] T040 [US7] Implement `GET /api/logs` in `backend/src/routes/logs.js` (limit/filter by `acao`)
+- [x] T041 [US7] Add logs view section in `frontend/public/painel/index.html` and `frontend/public/painel/painel.js`
 
 **Checkpoint**: Observabilidade da simulação no painel
 
@@ -176,10 +176,10 @@
 
 **Purpose**: Fechamento operacional e validação E2E
 
-- [ ] T042 [P] Add README section for Docker quickstart linking `specs/001-fila-emergencia-sangue/quickstart.md` in `README.md`
-- [ ] T043 Handle empty queue, inactive exam type, and final-state mutation errors consistently in `backend/src/middleware/errors.js` and services
-- [ ] T044 Run full validation checklist from `specs/001-fila-emergencia-sangue/quickstart.md` with `docker compose up`
-- [ ] T045 [P] Align OpenAPI examples with final routes if any drift in `specs/001-fila-emergencia-sangue/contracts/openapi.yaml`
+- [x] T042 [P] Add README section for Docker quickstart linking `specs/001-fila-emergencia-sangue/quickstart.md` in `README.md`
+- [x] T043 Handle empty queue, inactive exam type, and final-state mutation errors consistently in `backend/src/middleware/errors.js` and services
+- [x] T044 Run full validation checklist from `specs/001-fila-emergencia-sangue/quickstart.md` with `docker compose up`
+- [x] T045 [P] Align OpenAPI examples with final routes if any drift in `specs/001-fila-emergencia-sangue/contracts/openapi.yaml`
 
 ---
 

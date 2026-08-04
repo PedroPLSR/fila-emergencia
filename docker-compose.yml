@@ -1,0 +1,37 @@
+services:
+  db:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER:-fila}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-fila}
+      POSTGRES_DB: ${POSTGRES_DB:-fila_emergencia}
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-fila} -d ${POSTGRES_DB:-fila_emergencia}"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  api:
+    build: ./backend
+    environment:
+      DATABASE_URL: ${DATABASE_URL:-postgres://fila:fila@db:5432/fila_emergencia}
+      PORT: ${PORT:-3000}
+    ports:
+      - "3000:3000"
+    depends_on:
+      db:
+        condition: service_healthy
+
+  web:
+    build: ./frontend
+    ports:
+      - "8080:80"
+    depends_on:
+      - api
+
+volumes:
+  pgdata:

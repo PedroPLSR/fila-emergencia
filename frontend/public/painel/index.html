@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Painel da equipe — Fila Emergência</title>
+  <link rel="stylesheet" href="/shared/styles.css" />
+  <link rel="stylesheet" href="./painel.css" />
+</head>
+<body>
+  <main class="wrap">
+    <header class="painel-header">
+      <div>
+        <a href="/" class="muted">← Início</a>
+        <h1>Painel da equipe</h1>
+        <p class="muted" id="dia-info">Carregando dia operacional...</p>
+      </div>
+      <div class="header-actions">
+        <button type="button" class="btn secondary" id="btn-refresh">Atualizar</button>
+        <button type="button" class="btn danger" id="btn-dia">Encerrar/abrir dia</button>
+      </div>
+    </header>
+
+    <div id="global-msg"></div>
+
+    <section class="card" style="margin-bottom:1rem;">
+      <label for="filtro-tipo">Fila por tipo de exame</label>
+      <select id="filtro-tipo"></select>
+      <button type="button" class="btn" id="btn-proximo">Chamar próximo</button>
+    </section>
+
+    <div class="grid-2">
+      <section class="card">
+        <h2>Fila ativa</h2>
+        <div id="fila-resumo" class="muted">—</div>
+        <div id="fila-lista" class="lista"></div>
+      </section>
+
+      <section class="card">
+        <h2>Atendimento selecionado</h2>
+        <div id="detalhe" class="muted">Selecione um item na fila.</div>
+        <div id="detalhe-actions" hidden>
+          <div class="actions-row">
+            <button type="button" class="btn urgent" id="btn-urgente">Marcar urgente</button>
+            <button type="button" class="btn secondary" id="btn-rotina">Marcar rotina</button>
+          </div>
+          <div class="actions-row">
+            <button type="button" class="btn secondary" data-status="em_atendimento">Em atendimento</button>
+            <button type="button" class="btn" data-status="concluido">Concluir</button>
+            <button type="button" class="btn danger" data-status="cancelado">Cancelar</button>
+          </div>
+          <label for="resultado">Resultado (ao concluir)</label>
+          <select id="resultado">
+            <option value="">—</option>
+            <option value="apto">Apto</option>
+            <option value="inapto">Inapto</option>
+          </select>
+        </div>
+      </section>
+    </div>
+
+    <section class="card" style="margin-top:1rem;">
+      <h2>Logs do sistema</h2>
+      <div id="logs" class="logs"></div>
+    </section>
+  </main>
+  <script type="module" src="./painel.js"></script>
+</body>
+</html>
