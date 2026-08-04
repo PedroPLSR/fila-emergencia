@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Totem — Fila Emergência</title>
+  <link rel="stylesheet" href="/shared/styles.css" />
+  <link rel="stylesheet" href="./totem.css" />
+</head>
+<body>
+  <main class="wrap totem">
+    <header class="totem-header">
+      <a href="/" class="muted">← Início</a>
+      <h1>Totem de atendimento</h1>
+      <p class="muted">Informe seus dados e escolha o tipo de exame.</p>
+    </header>
+
+    <nav class="tabs">
+      <button type="button" class="tab active" data-tab="emitir">Emitir senha</button>
+      <button type="button" class="tab" data-tab="consultar">Consultar</button>
+    </nav>
+
+    <section id="panel-emitir" class="card">
+      <form id="form-emitir">
+        <label for="nome">Nome completo *</label>
+        <input id="nome" name="nome_completo" required autocomplete="name" />
+
+        <label for="documento">Documento (CPF ou RG) *</label>
+        <input id="documento" name="documento" required autocomplete="off" />
+
+        <label for="tipo">Tipo de exame *</label>
+        <select id="tipo" name="tipo_exame_codigo" required>
+          <option value="">Carregando...</option>
+        </select>
+
+        <button class="btn" type="submit">Emitir senha</button>
+      </form>
+      <div id="emit-msg"></div>
+      <div id="emit-result" hidden>
+        <p class="muted" style="text-align:center; margin-bottom:0;">Sua senha</p>
+        <p class="senha-display" id="senha-num"></p>
+        <p class="muted" style="text-align:center;" id="senha-tipo"></p>
+      </div>
+    </section>
+
+    <section id="panel-consultar" class="card" hidden>
+      <form id="form-consultar">
+        <label for="c-tipo">Tipo de exame *</label>
+        <select id="c-tipo" required></select>
+
+        <label for="c-senha">Número da senha *</label>
+        <input id="c-senha" type="number" min="1" required />
+
+        <label for="c-doc">Documento (opcional)</label>
+        <input id="c-doc" />
+
+        <button class="btn" type="submit">Consultar</button>
+      </form>
+      <div id="consulta-msg"></div>
+      <div id="consulta-result" class="card" style="margin-top:1rem; background:var(--bg-panel);" hidden></div>
+    </section>
+  </main>
+  <script type="module" src="./totem.js"></script>
+</body>
+</html>

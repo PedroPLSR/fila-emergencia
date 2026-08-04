@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Fila Emergência — Castelão</title>
+  <link rel="stylesheet" href="/shared/styles.css" />
+  <style>
+    .hero {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: stretch;
+      gap: 1.5rem;
+    }
+    .brand {
+      font-size: clamp(1.8rem, 4vw, 2.6rem);
+      margin: 0 0 0.35rem;
+    }
+    .choices {
+      display: grid;
+      gap: 1rem;
+    }
+    @media (min-width: 640px) {
+      .choices { grid-template-columns: 1fr 1fr; }
+    }
+    .choice {
+      display: block;
+      text-decoration: none;
+      color: inherit;
+      padding: 2rem 1.5rem;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      transition: border-color 0.2s, transform 0.15s;
+    }
+    .choice:hover {
+      border-color: var(--accent);
+      transform: translateY(-2px);
+    }
+    .choice h2 { margin: 0 0 0.5rem; color: var(--accent); }
+  </style>
+</head>
+<body>
+  <main class="wrap hero">
+    <header>
+      <p class="muted" style="margin:0; text-transform:uppercase; letter-spacing:0.12em; font-size:0.8rem;">Simulação · Posto Castelão</p>
+      <h1 class="brand">Fila de Emergência</h1>
+      <p class="muted">Coleta e exame de sangue — escolha a superfície de uso.</p>
+    </header>
+    <div class="choices">
+      <a class="choice" href="/totem/">
+        <h2>Totem público</h2>
+        <p class="muted" style="margin:0;">Emitir senha e consultar status/resultado.</p>
+      </a>
+      <a class="choice" href="/painel/">
+        <h2>Painel da equipe</h2>
+        <p class="muted" style="margin:0;">Priorizar, chamar, status, dia e logs.</p>
+      </a>
+    </div>
+  </main>
+</body>
+</html>
