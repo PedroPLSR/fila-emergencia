@@ -198,3 +198,6 @@ No **painel da equipe**, operadores ou responsáveis pela simulação consultam 
 - Monitoramento de logs cobre eventos de negócio da fila; retenção segue prática padrão de demonstração (disponível durante o período de uso da simulação).
 - Volume “centenas de pessoas” do contexto é tratado como meta de desenho operacional da simulação (capacidade de registrar e ordenar muitos atendimentos), não como teste de carga de infraestrutura em produção.
 - Fora de escopo inicial: integração com equipamentos de laboratório, impressão física obrigatória de etiquetas de tubo, autenticação corporativa complexa e multi-tenant de vários estádios.
+
+<!-- CI demo: altera��o s� em spec.md para for�ar falha da Action -->
+
