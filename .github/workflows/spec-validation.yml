@@ -18,7 +18,7 @@ jobs:
         with:
           fetch-depth: 0
 
-      - name: Check if spec.md was modified
+      - name: Check Spec-Driven artifacts
         id: spec_check
         run: |
           BASE_SHA="${{ github.event.pull_request.base.sha }}"
@@ -28,16 +28,57 @@ jobs:
           echo "Changed files:"
           echo "$CHANGED_FILES"
 
+          SPEC_CHANGED=false
+          PLAN_CHANGED=false
+          TASKS_CHANGED=false
+
           if echo "$CHANGED_FILES" | grep -E '(^|/)spec\.md$' > /dev/null; then
-            echo "spec.md was modified in this pull request."
-            echo "changed=true" >> "$GITHUB_OUTPUT"
-          else
-            echo "spec.md was not modified in this pull request."
-            echo "changed=false" >> "$GITHUB_OUTPUT"
+            SPEC_CHANGED=true
           fi
 
+          if echo "$CHANGED_FILES" | grep -E '(^|/)plan\.md$' > /dev/null; then
+            PLAN_CHANGED=true
+          fi
+
+          if echo "$CHANGED_FILES" | grep -E '(^|/)tasks\.md$' > /dev/null; then
+            TASKS_CHANGED=true
+          fi
+
+          echo "spec_changed=$SPEC_CHANGED" >> "$GITHUB_OUTPUT"
+          echo "plan_changed=$PLAN_CHANGED" >> "$GITHUB_OUTPUT"
+          echo "tasks_changed=$TASKS_CHANGED" >> "$GITHUB_OUTPUT"
+
+          if [ "$SPEC_CHANGED" = false ]; then
+            echo "spec.md was not modified in this pull request."
+            exit 0
+          fi
+
+          echo "spec.md was modified in this pull request."
+
+          FAILED=false
+
+          if [ "$PLAN_CHANGED" = false ]; then
+            echo "::error::spec.md was modified but plan.md was not. Update the plan when the specification changes."
+            FAILED=true
+          else
+            echo "plan.md was also modified."
+          fi
+
+          if [ "$TASKS_CHANGED" = false ]; then
+            echo "::error::spec.md was modified but tasks.md was not. Update the tasks when the specification changes."
+            FAILED=true
+          else
+            echo "tasks.md was also modified."
+          fi
+
+          if [ "$FAILED" = true ]; then
+            exit 1
+          fi
+
+          echo "Specification, plan, and tasks were all updated."
+
       - name: Comment on pull request
-        if: steps.spec_check.outputs.changed == 'true'
+        if: steps.spec_check.outputs.spec_changed == 'true'
         uses: actions/github-script@v7
         with:
           script: |
