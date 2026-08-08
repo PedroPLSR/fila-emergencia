@@ -36,16 +36,17 @@ Abordagem técnica: frontend estático HTML/CSS/JS; API REST em Node.js (Express
 
 *GATE: Must pass before Phase 0 research. Re-check after Phase 1 design.*
 
-A constituição em `.specify/memory/constitution.md` ainda está no template placeholder (princípios não ratificados). Gates aplicáveis neste estado:
+Constituição ratificada **v1.0.0** (`.specify/memory/constitution.md`). Gates por princípio:
 
 | Gate | Status | Notes |
 |------|--------|-------|
-| Princípios customizados | N/A | Template vazio — sem violações concretas a checar |
-| Simplicidade da simulação | PASS | Vanilla front + Express + Postgres no Compose |
-| Escopo sem integrações externas | PASS | Alinhado a FR-014 |
-| Observabilidade mínima (logs) | PASS | Entidade `Evento de Log` + endpoint de consulta |
+| I. Docker Compose First | PASS | Runtime local só via Compose (`db`/`api`/`web`); quickstart e README alinhados |
+| II. Spec/Plan/Tasks Coevolution | PASS | Artefatos nesta pasta coevoluem; CI `.github/workflows/spec-validation.yml` falha PRs que alteram `spec.md` sem `plan.md` e `tasks.md` |
+| III. No Corporate Auth in v1 | PASS | Totem e painel sem login (FR-015); SSO/VPN fora de escopo |
+| IV. Stack Simplicity | PASS | Vanilla HTML/CSS/JS + nginx, Express, PostgreSQL; sem ORM/SPA/frameworks extras |
+| V. Mandatory Queue Audit Logs | PASS | `EventoLog` com superfície do ator, ação, identidade da senha/fila e timestamp; mutações de fila e audit na mesma transação (falha conjunta) |
 
-**Post-design re-check**: PASS — contratos e modelo de dados permanecem enxutos; Docker Compose é o caminho único de runtime local pedido pelo usuário.
+**Post-design re-check**: PASS — princípios I–V satisfeitos no desenho; Compose único runtime local; audit atômico com `superficie_ator`.
 
 ## Project Structure
 
@@ -59,7 +60,7 @@ specs/001-fila-emergencia-sangue/
 ├── quickstart.md
 ├── contracts/
 │   └── openapi.yaml
-└── tasks.md                 # /speckit-tasks (não criado aqui)
+└── tasks.md
 ```
 
 ### Source Code (repository root)
@@ -115,4 +116,4 @@ frontend/
 
 ## Complexity Tracking
 
-> Sem violações de constituição a justificar (template não ratificado; desenho permanece simples).
+> Sem violações de constituição a justificar (princípios I–V PASS; desenho permanece simples).

@@ -416,13 +416,17 @@ components:
 
     EventoLog:
       type: object
-      required: [id, ocorrido_em, acao, detalhe]
+      required: [id, ocorrido_em, superficie_ator, acao, detalhe]
       properties:
         id:
           type: string
         ocorrido_em:
           type: string
           format: date-time
+        superficie_ator:
+          type: string
+          enum: [totem, painel]
+          description: Superfície do ator que disparou a ação (who)
         acao:
           type: string
         atendimento_id:
