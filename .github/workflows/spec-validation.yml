@@ -1,6 +1,7 @@
 name: Spec Validation
 
 on:
+  push:
   pull_request:
     types: [opened, synchronize, reopened]
 
@@ -21,10 +22,18 @@ jobs:
       - name: Check Spec-Driven artifacts
         id: spec_check
         run: |
-          BASE_SHA="${{ github.event.pull_request.base.sha }}"
-          HEAD_SHA="${{ github.event.pull_request.head.sha }}"
+          if [ "${{ github.event_name }}" = "pull_request" ]; then
+            BASE_SHA="${{ github.event.pull_request.base.sha }}"
+            HEAD_SHA="${{ github.event.pull_request.head.sha }}"
+          else
+            DEFAULT_BRANCH="${{ github.event.repository.default_branch }}"
+            git fetch origin "$DEFAULT_BRANCH"
+            BASE_SHA=$(git merge-base "origin/$DEFAULT_BRANCH" HEAD)
+            HEAD_SHA="HEAD"
+          fi
 
           CHANGED_FILES=$(git diff --name-only "$BASE_SHA" "$HEAD_SHA")
+          echo "Comparing $BASE_SHA...$HEAD_SHA"
           echo "Changed files:"
           echo "$CHANGED_FILES"
 
@@ -49,11 +58,11 @@ jobs:
           echo "tasks_changed=$TASKS_CHANGED" >> "$GITHUB_OUTPUT"
 
           if [ "$SPEC_CHANGED" = false ]; then
-            echo "spec.md was not modified in this pull request."
+            echo "spec.md was not modified in this change set."
             exit 0
           fi
 
-          echo "spec.md was modified in this pull request."
+          echo "spec.md was modified."
 
           FAILED=false
 
@@ -78,7 +87,7 @@ jobs:
           echo "Specification, plan, and tasks were all updated."
 
       - name: Comment on pull request
-        if: steps.spec_check.outputs.spec_changed == 'true'
+        if: github.event_name == 'pull_request' && steps.spec_check.outputs.spec_changed == 'true'
         uses: actions/github-script@v7
         with:
           script: |
