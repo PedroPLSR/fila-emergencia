@@ -41,6 +41,7 @@ CREATE INDEX IF NOT EXISTS idx_atendimentos_fila
 CREATE TABLE IF NOT EXISTS eventos_log (
   id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   ocorrido_em TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+  superficie_ator TEXT NOT NULL CHECK (superficie_ator IN ('totem', 'painel')),
   acao TEXT NOT NULL,
   atendimento_id UUID REFERENCES atendimentos(id),
   detalhe TEXT NOT NULL

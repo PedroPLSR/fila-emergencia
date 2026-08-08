@@ -104,6 +104,7 @@ export async function chamarProximo(tipoExameCodigo) {
 
     await registrarLog(client, {
       acao: 'CHAMAR_PROXIMO',
+      superficieAtor: 'painel',
       atendimentoId: id,
       detalhe: `Chamado senha ${updated.rows[0].numero_senha} (${tipo.codigo})`,
     });

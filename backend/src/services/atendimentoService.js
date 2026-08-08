@@ -107,6 +107,7 @@ export async function emitirSenha({ nome_completo, documento, tipo_exame_codigo 
 
     await registrarLog(client, {
       acao: 'EMITIR_SENHA',
+      superficieAtor: 'totem',
       atendimentoId: row.id,
       detalhe: `Senha ${numero} emitida para ${tipo.codigo} (${nome})`,
     });
@@ -145,6 +146,7 @@ export async function alterarPrioridade(id, prioridade) {
 
     await registrarLog(client, {
       acao: 'PRIORIZAR',
+      superficieAtor: 'painel',
       atendimentoId: id,
       detalhe: `Prioridade ${from} → ${prioridade} (senha ${current.numero_senha})`,
     });
@@ -203,6 +205,7 @@ export async function atualizarStatus(id, { status, resultado = null }) {
 
     await registrarLog(client, {
       acao: 'ATUALIZAR_STATUS',
+      superficieAtor: 'painel',
       atendimentoId: id,
       detalhe: `Status ${current.status} → ${status}${resultado ? ` (resultado: ${resultado})` : ''}`,
     });

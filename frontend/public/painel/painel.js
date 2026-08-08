@@ -95,7 +95,7 @@ async function loadLogs() {
       (l) => `
       <div class="log-line">
         <time>${new Date(l.ocorrido_em).toLocaleString('pt-BR')}</time>
-        <strong>${l.acao}</strong> — ${l.detalhe}
+        <strong>${l.acao}</strong> [${l.superficie_ator}] — ${l.detalhe}
       </div>`
     )
     .join('') || '<p class="muted">Sem eventos.</p>';

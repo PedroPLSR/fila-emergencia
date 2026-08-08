@@ -61,17 +61,20 @@ Senha/registro de uma pessoa na fila de um tipo em um dia.
 
 ### EventoLog
 
-Registro imutável de operação relevante.
+Registro imutável de operação relevante (constituição V: who/what/when).
 
 | Field | Type | Rules |
 |-------|------|--------|
 | id | UUID / serial | PK |
-| ocorrido_em | timestamptz | default now |
-| acao | string | ex.: `EMITIR_SENHA`, `PRIORIZAR`, `CHAMAR_PROXIMO`, `ATUALIZAR_STATUS`, `ENCERRAR_ABRIR_DIA` |
-| atendimento_id | FK nullable | quando aplicável |
-| detalhe | text/json | resumo legível (senha, tipo, de→para) |
+| ocorrido_em | timestamptz | default now (when) |
+| superficie_ator | enum | `totem` \| `painel` (who / actor surface) |
+| acao | string | ex.: `EMITIR_SENHA`, `PRIORIZAR`, `CHAMAR_PROXIMO`, `ATUALIZAR_STATUS`, `ENCERRAR_ABRIR_DIA` (what) |
+| atendimento_id | FK nullable | identidade da senha quando aplicável |
+| detalhe | text/json | resumo legível (senha, tipo/fila, de→para) |
 
 Append-only; sem update/delete na simulação.
+
+**Atomicidade**: toda mutação de fila (emitir, priorizar, chamar, status, encerrar/abrir dia) MUST gravar o `EventoLog` na **mesma transação** que a alteração de negócio; se o insert do log falhar, a ação MUST ser revertida (falha conjunta, nunca silenciosa).
 
 ## Relationships
 

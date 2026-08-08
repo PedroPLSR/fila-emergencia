@@ -25,6 +25,7 @@ export async function encerrarAbrir() {
 
     await registrarLog(client, {
       acao: 'ENCERRAR_ABRIR_DIA',
+      superficieAtor: 'painel',
       detalhe: `Dia ${atual.id} fechado; novo dia ${novo.rows[0].id} aberto`,
     });
 
