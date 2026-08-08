@@ -1,0 +1,49 @@
+name: Spec Validation
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened]
+
+permissions:
+  contents: read
+  pull-requests: write
+
+jobs:
+  detect-spec-change:
+    name: Detect spec.md changes
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Check if spec.md was modified
+        id: spec_check
+        run: |
+          BASE_SHA="${{ github.event.pull_request.base.sha }}"
+          HEAD_SHA="${{ github.event.pull_request.head.sha }}"
+
+          CHANGED_FILES=$(git diff --name-only "$BASE_SHA" "$HEAD_SHA")
+          echo "Changed files:"
+          echo "$CHANGED_FILES"
+
+          if echo "$CHANGED_FILES" | grep -E '(^|/)spec\.md$' > /dev/null; then
+            echo "spec.md was modified in this pull request."
+            echo "changed=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "spec.md was not modified in this pull request."
+            echo "changed=false" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Comment on pull request
+        if: steps.spec_check.outputs.changed == 'true'
+        uses: actions/github-script@v7
+        with:
+          script: |
+            await github.rest.issues.createComment({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: context.issue.number,
+              body: 'A especificação foi modificada. A CI detectou a alteração com sucesso.'
+            });
